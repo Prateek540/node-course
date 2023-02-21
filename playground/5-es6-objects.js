@@ -1,0 +1,1 @@
+//destructuring and property shorthand
