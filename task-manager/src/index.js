@@ -1,15 +1,10 @@
 const express = require("express");
 require("./db/mongoose");
-
 const userRouter = require("./routers/user");
 const taskRouter = require("./routers/task");
 
 const app = express();
 const port = 3000;
-
-// app.use((req, res, next) => {
-//   res.send("Server is under maintenance. Try again later!!!");
-// });
 
 app.use(express.json());
 app.use(userRouter);
