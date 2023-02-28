@@ -5,6 +5,7 @@ test("Should calculate total with tip!!!", () => {
   expect(total).toBe(13);
 });
 
-test("Asynchronous code", () => {
+test("Asynchronous code", (done) => {
   expect(1).toBe(1);
+  done();
 });
