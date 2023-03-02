@@ -17,11 +17,15 @@ let count = 0;
 io.on("connection", (socket) => {
   console.log("New websocket connection");
 
-  socket.emit("countUpdated", count);
+  socket.emit("message", "Welcome!!!");
+  socket.broadcast.emit("message", "A new user joined");
 
-  socket.on("increment", () => {
-    count++;
-    io.emit("countUpdated", count);
+  socket.on("messageSend", (messageData) => {
+    io.emit("message", messageData);
+  });
+
+  socket.on("disconnect", () => {
+    io.emit("message", "A user got disconnected");
   });
 });
 
