@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
+    "start": "env-cmd ./config/dev.env node src/index.js",
     "dev": "env-cmd ./config/dev.env nodemon src/index.js"
   },
   "keywords": [],
@@ -12,7 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "env-cmd": "^8.0.2",
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "socket.io": "^2.2.0"
   },
   "devDependencies": {
     "nodemon": "^1.18.7"
