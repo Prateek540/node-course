@@ -20,8 +20,17 @@ io.on("connection", (socket) => {
   socket.emit("message", "Welcome!!!");
   socket.broadcast.emit("message", "A new user joined");
 
-  socket.on("messageSend", (messageData) => {
+  socket.on("messageSend", (messageData, callback) => {
     io.emit("message", messageData);
+    callback();
+  });
+
+  socket.on("sendLocation", (coords, callback) => {
+    io.emit(
+      "locationMessage",
+      `https://google.com/maps?q=${coords.latitude},${coords.longitude}`
+    );
+    callback();
   });
 
   socket.on("disconnect", () => {
