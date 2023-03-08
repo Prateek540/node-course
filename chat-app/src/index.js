@@ -37,27 +37,40 @@ io.on("connection", (socket) => {
     if (error) {
       return callback(error);
     }
+
     socket.join(user.room);
-    socket.emit("message", generateMessage("Welcome"));
+
+    socket.emit("message", generateMessage("Admin", "Welcome"));
     socket.broadcast
       .to(user.room)
       .emit(
         "message",
-        generateMessage(`${user.username} has joined the chatroom`)
+        generateMessage("Admin", `${user.username} has joined the chatroom`)
       );
+
+    io.to(user.room).emit("roomData", {
+      room: user.room,
+      users: getUsersInRoom(user.room),
+    });
 
     callback();
   });
 
   socket.on("messageSend", (messageData, callback) => {
-    io.emit("message", generateMessage(messageData));
+    const user = getUser(socket.id);
+    io.to(user.room).emit(
+      "message",
+      generateMessage(user.username, messageData)
+    );
     callback();
   });
 
   socket.on("sendLocation", (coords, callback) => {
-    io.emit(
+    const user = getUser(socket.id);
+    io.to(user.room).emit(
       "locationMessage",
       generateLocationMessages(
+        user.username,
         `https://google.com/maps?q=${coords.latitude},${coords.longitude}`
       )
     );
@@ -65,12 +78,16 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    const user = removeUser({ id: socket.id });
+    const user = removeUser(socket.id);
     if (user) {
       io.to(user.room).emit(
         "message",
-        generateMessage(`${user.username} got disconnected`)
+        generateMessage("Admin", `${user.username} got disconnected`)
       );
+      io.to(user.room).emit("roomData", {
+        room: user.room,
+        users: getUsersInRoom(user.room),
+      });
     }
   });
 });
